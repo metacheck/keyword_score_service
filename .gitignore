@@ -1,0 +1,4 @@
+env.py
+sendgrid-venv/
+__pycache__/
+.idea
