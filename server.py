@@ -6,28 +6,9 @@ import aiohttp_cors
 from aiohttp import web
 from aiohttp.helpers import get_running_loop
 
+
 routes = web.RouteTableDef()
 
-
-@routes.post("/check_ticket_closable")
-async def check_ticket_closable(request):
-    print("test")
-    return web.json_response({"status": "OK", "can_close": True})
-
-
-@routes.post("/close_ticket")
-async def close_ticket(request):
-    return web.json_response({"status": "OK", "closed": True})
-
-
-@routes.post("/set_close_date")
-async def set_close_date(request):
-    return web.json_response({"status": "OK", "closed": True})
-
-
-@routes.post("/reset_close_date")
-async def reset_close_date(request):
-    return web.json_response({"status": "OK", "closed": True})
 
 
 @routes.post("/test")
