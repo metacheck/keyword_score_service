@@ -6,6 +6,7 @@ from keybert import KeyBERT
 import aiohttp_cors
 from aiohttp import web
 from aiohttp.helpers import get_running_loop
+from sentence_transformers import SentenceTransformer
 
 routes = web.RouteTableDef()
 counter = 0
@@ -65,8 +66,8 @@ async def run():
     global app
     global thread_pool
     global kw_model
-
-    kw_model = KeyBERT()
+    sentence_model = SentenceTransformer(os.path.abspath("")+"/storage/all-MiniLM-L12-v2/")
+    kw_model = KeyBERT(model=sentence_model)
     thread_pool = ThreadPoolExecutor(max_workers=50)
     app = web.Application()
     app.on_startup.append(setup_app)

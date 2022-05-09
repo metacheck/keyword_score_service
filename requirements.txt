@@ -1,3 +1,4 @@
 aiohttp==3.7.4.post0
 aiohttp_cors==0.7.0
 keybert==0.5.1
+sentence_transformers==2.2.0
