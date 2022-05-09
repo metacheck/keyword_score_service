@@ -66,7 +66,7 @@ async def run():
     global app
     global thread_pool
     global kw_model
-    sentence_model = SentenceTransformer(os.path.abspath("")+"/storage/all-MiniLM-L12-v2/")
+    sentence_model = SentenceTransformer(os.path.abspath("")+"/storage/all-MiniLM-L6-v2/")
     kw_model = KeyBERT(model=sentence_model)
     thread_pool = ThreadPoolExecutor(max_workers=50)
     app = web.Application()
