@@ -1,26 +1,29 @@
 import asyncio
 import os
-from concurrent.futures import ThreadPoolExecutor
+import time
+from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
 from keybert import KeyBERT
 import aiohttp_cors
 from aiohttp import web
 from aiohttp.helpers import get_running_loop
 
-
 routes = web.RouteTableDef()
-
+counter = 0
 
 
 @routes.post("/test")
 async def test(request):
     def task(text):
         res = kw_model.extract_keywords(text, keyphrase_ngram_range=(1, 1), stop_words="english")
-        res = res+kw_model.extract_keywords(text, keyphrase_ngram_range=(2, 2), stop_words="english")
-        res = res+kw_model.extract_keywords(text, keyphrase_ngram_range=(3, 3), stop_words="english")
+        res = res + kw_model.extract_keywords(text, keyphrase_ngram_range=(2, 2), stop_words="english")
+        res = res + kw_model.extract_keywords(text, keyphrase_ngram_range=(3, 3), stop_words="english")
         return res
 
     # results: list[
     #     Union[list[tuple[str, float]], list[list[tuple[str, float]]]]] = []
+
+    start = time.time()
+
     scrape_results = (await request.json())
     scrape_results = scrape_results["scrape_results"]
 
@@ -37,7 +40,11 @@ async def test(request):
         complete_scrape_results.append(dic)
         index += 1
 
-    return web.json_response({"status": "OK", "scrape_results": complete_scrape_results})
+    end = time.time()
+    global counter
+    counter += 1
+    print("current ", counter)
+    return web.json_response({"status": "OK", "execution_time": end - start, "scrape_results": complete_scrape_results})
 
 
 @routes.get("/test2")
@@ -51,15 +58,16 @@ async def setup_app(app):
 
 app = None
 thread_pool = None
-kw_model = KeyBERT()
+kw_model = None
 
 
-def run():
+async def run():
     global app
     global thread_pool
     global kw_model
 
-    thread_pool = ThreadPoolExecutor()
+    kw_model = KeyBERT()
+    thread_pool = ThreadPoolExecutor(max_workers=50)
     app = web.Application()
     app.on_startup.append(setup_app)
     cors = aiohttp_cors.setup(
@@ -85,4 +93,4 @@ async def serve():
 
 if __name__ == "__main__":
     app = run()
-    web.run_app(app, port=os.environ.get("PORT",8889))
+    web.run_app(app, port=os.environ.get("PORT", 9002))
