@@ -75,7 +75,7 @@ async def run():
     global kw_extractor
     global thread_pool
     global kw_model
-    sentence_model = SentenceTransformer(os.path.abspath("") + "/storage/all-MiniLM-L12-v2/")
+    sentence_model = SentenceTransformer(os.path.abspath("") + "/storage/all-MiniLM-L6-v2/")
     kw_model = KeyBERT(model=sentence_model)
     kw_extractor = yake.KeywordExtractor(dedupLim=0.9,
                                          dedupFunc='seqm', top=10)
